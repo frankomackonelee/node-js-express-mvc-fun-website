@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+    <%- include('partials/head') %>
+</head>
+<body>
+    <%- include('partials/navigation') %>
+    <main class="main-content container">
+        <div class="card bg-dark text-white text-center">
+            <div class="card-header">
+                <h3>Create Story</h3>
+            </div>
+            <div class="card-body text-start">
+                <form action="/submit-form" method="post">
+
+                    <div class="mb-3">
+                        <label for="location">Location</label>
+                        <input type="text" name="location" placeholder="location" class="form-control">    
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="firstName">Firstname</label>
+                        <input type="text" name="firstName" placeholder="first name" class="form-control">    
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="lastName">Lastname</label>
+                        <input type="text" name="lastName" placeholder="last name" class="form-control">    
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="age">Age</label>
+                        <input type="number" name="age" placeholder="age" class="form-control">    
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="description">Description</label>
+                        <input type="text" name="description" placeholder="eg 'granny'" class="form-control">    
+                    </div>
+                
+                    <div class="text-end">
+                        <button type="submit" class="btn btn-primary btn-block">Save</button>
+                    </div>
+                    
+                </form>
+            </div>
+        </div>
+    </main>
+    <%- include('partials/footer') %>
+</body>
+</html>
