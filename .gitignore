@@ -1,0 +1,47 @@
+# Dependency directories
+node_modules/
+
+# Debug log from npm
+npm-debug.log
+
+# Yarn integrity file
+.yarn-integrity
+
+# Environment files
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Operating System Files
+.DS_Store
+Thumbs.db
+
+# IDE / Editor directories
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Build output directory
+/dist
+/build
+
+# Temporary files
+tmp/
+temp/
+
+# Logs
+logs
+*.log
+
+# Optional npm cache directory
+.npm
+
+# Optional eslint cache
+.eslintcache
+
+# Optional REPL history
+.node_repl_history
