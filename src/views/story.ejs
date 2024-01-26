@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Local News - Egg-citing Rescue</title>
+    <title><%= location %> News - Egg-citing Rescue</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -40,22 +40,22 @@
 </head>
 <body>
     <div class="header">
-        <h1>Local News Daily</h1>
+        <h1><%= location %> News Daily</h1>
     </div>
     <div class="container">
         <div class="news-article">
-            <h2 class="news-title">Local Resident Caught with Egg on Her Face</h2>
+            <h2 class="news-title"><%= location %> Resident Caught with Egg on Her Face</h2>
             <p class="news-content">
-                In a humorous mix-up, a local resident was found last night digging through the bins behind the Co-op on Elm Street. Passersby, mistaking the individual for a burglar, quickly alerted the police. However, it turned out the person was on a mission to save what they believed were perfectly good egg sandwiches from being wasted.
+                In a humorous mix-up, a <%= location %> resident was found last night digging through the bins behind the Co-op on Elm Street. Passersby, mistaking <%= firstName %> <%= lastName %>, <%= age %>, for a burglar, quickly alerted the police. However, it turned out the person was on a mission to save what they believed were perfectly good egg sandwiches from being wasted.
             </p>
             <p class="news-content">
-                The individual, determined to combat food waste, was discovered by the police surrounded by discarded sandwiches. “Wasting food just doesn’t sit right with me,” the resident remarked, holding a salvaged egg sandwich.
+                <%= firstName %>, determined to combat food waste, was discovered by the police surrounded by discarded sandwiches. “Wasting food just doesn’t sit right with me,” the <%= description %> remarked, holding a salvaged egg sandwich.
             </p>
             <p class="news-content">
-                The Co-op manager, who initially reacted with concern, soon found humor in the situation. “While we appreciate the concern for food waste, we don’t recommend dumpster diving as a solution,” they commented. Police, recognizing the harmless nature of the intentions, let the individual go without any charges, and even offered a ride home, ensuring the collected sandwiches were taken along.
+                The Co-op manager, who initially reacted with concern, soon found humor in the situation. “While we appreciate the concern for food waste, we don’t recommend dumpster diving as a solution,” they commented. Police, recognizing the harmless nature of the intentions, let <%= firstName %>l go without any charges, and even offered a ride home, ensuring the collected sandwiches were taken along.
             </p>
             <p class="news-content">
-                The resident now plans to enjoy the egg sandwiches, saved from an unappetizing end. This quirky incident has sparked a review of food waste policies by Co-op, and the police have issued a gentle reminder about the impracticalities of bin-diving, no matter how well-intentioned. The resident, meanwhile, is pleased with the successful rescue of the sandwiches, ready for a delightful meal.
+                <%= firstName %> now plans to enjoy the egg sandwiches, saved from an unappetizing end. This quirky incident has sparked a review of food waste policies by Co-op, and the police have issued a gentle reminder about the impracticalities of bin-diving, no matter how well-intentioned. The resident, meanwhile, is pleased with the successful rescue of the sandwiches, ready for a delightful meal.
             </p>
         </div>
     </div>
