@@ -1,4 +1,4 @@
-export interface IKeyCharacter{
+export interface KeyCharacter{
     location: string,
     firstName: string,
     lastName: string,

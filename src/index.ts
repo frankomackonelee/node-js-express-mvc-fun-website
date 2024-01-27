@@ -1,8 +1,14 @@
 import express from 'express';
 import { dirname, join } from 'path';
 import { fileURLToPath } from 'url';
-
+import { Container } from 'typedi';
 import indexRoutes from './routes/router.js'
+import { IKeyCharacterRepository, IKeyCharacterRepositoryToken } from './infrastructure/interfaces/key-character-repository.js';
+import { KeyCharacterMemoryRepository } from './infrastructure/repositories/key-character-memory-repo.js';
+
+// Set up a DI container and register implementation...
+Container.set(IKeyCharacterRepositoryToken, new KeyCharacterMemoryRepository());
+
 
 const app = express();
 
