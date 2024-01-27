@@ -17,13 +17,14 @@ The project has been extended to add fuctionality and the following features
 - dependency injection (I realise this might look like overkill, but v. easy to implement and I want to be able to switch between an ACTUAL and a MOCKED persistency layer, and I think this is easier to do if you have worked to an interface originally)
 - create a 'permanent' web page with the contents of a form via form submission, which is saved in an in-memory collection
 - static element of content was generated with chat GPT
+- ability to edit the story immediately following a submission
 
 ## Limitations / TODO List
-- Add a form that allows you to edit an existing story and provides the permanent url to go to the story
 - Restrict PUT access to original author (hack) using uid returned to original request
 - Improve security around user generated content (UGC)
 - Add form validation for input of UGC
 - Add proper persistency layer and instructions to switch between so you can run project locally with or without a persistency layer 
+- The edit form uses a common technique to edit the value but it does not comply with REST
 - Deploy to server
 - Add custom url
 - Create CI/CD pipeline 

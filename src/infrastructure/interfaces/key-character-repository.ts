@@ -5,6 +5,8 @@ export abstract class IKeyCharacterRepository{
     
     abstract addKeyCharacter(character: KeyCharacter): Promise<number>;
 
+    abstract editKeyCharacter(id: number, character: KeyCharacter): Promise<number>;
+
     abstract getKeyCharacter(id: number): Promise<KeyCharacter>;
 
 }

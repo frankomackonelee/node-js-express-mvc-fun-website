@@ -12,38 +12,50 @@
     <main class="main-content container">
         <div class="card bg-dark text-white text-center">
             <div class="card-header">
-                <h3>Create Story</h3>
+                <h3><%= title %></h3>
             </div>
             <div class="card-body text-start">
-                <form action="/submit-form" method="post">
+                <form action="<%= isEditMode ? '/submit-form/' + id : '/submit-form' %>" method="post">
+                    <% if (isEditMode) { %>
+                        <input type="hidden" name="_method" value="PUT">
+                        <input type="hidden" name="uid" value="<%= uid %>">
+                    <% } %>
 
                     <div class="mb-3">
                         <label for="location">Location</label>
-                        <input type="text" name="location" placeholder="location" class="form-control">    
+                        <input type="text" name="location" placeholder="location" value="<%= location %>" class="form-control">    
                     </div>
 
                     <div class="mb-3">
                         <label for="firstName">Firstname</label>
-                        <input type="text" name="firstName" placeholder="first name" class="form-control">    
+                        <input type="text" name="firstName" placeholder="first name" value="<%= firstName %>" class="form-control">    
                     </div>
 
                     <div class="mb-3">
                         <label for="lastName">Lastname</label>
-                        <input type="text" name="lastName" placeholder="last name" class="form-control">    
+                        <input type="text" name="lastName" placeholder="last name" value="<%= lastName %>" class="form-control">    
                     </div>
 
                     <div class="mb-3">
                         <label for="age">Age</label>
-                        <input type="number" name="age" placeholder="age" class="form-control">    
+                        <input type="number" name="age" placeholder="age" value="<%= isEditMode ? age : null %>" class="form-control">    
                     </div>
 
                     <div class="mb-3">
                         <label for="description">Description</label>
-                        <input type="text" name="description" placeholder="eg 'granny'" class="form-control">    
+                        <input type="text" name="description" placeholder="eg 'granny'" value="<%= description %>" class="form-control">    
                     </div>
                 
-                    <div class="text-end">
-                        <button type="submit" class="btn btn-primary btn-block">Save</button>
+                    <div class="d-flex justify-content-end">
+                        <% if (isEditMode) { %>
+                            <a class="btn btn-primary btn-block" href="/local-news/<%= id %>">
+                                See It
+                            </a>
+                        <% } %>
+
+                        <button type="submit" class="btn btn-secondary btn-block ms-auto">
+                            <%= isEditMode ? 'Update' : 'Save' %>
+                        </button>
                     </div>
                     
                 </form>

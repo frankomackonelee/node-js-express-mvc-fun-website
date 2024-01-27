@@ -32,9 +32,14 @@ export class KeyCharacterMemoryRepository extends IKeyCharacterRepository{
     
             resolve(nextMaxIndex);
         })
+    }
 
-
-
+    editKeyCharacter(id: number, character: KeyCharacter): Promise<number> {
+        return new Promise((resolve, reject) => {
+            this._KeyCharacterStore[id] = character;
+    
+            resolve(id);
+        })
     }
 
     getKeyCharacter(id: number): Promise<KeyCharacter> {
