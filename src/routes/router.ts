@@ -50,17 +50,17 @@ router.get('/example', async (req, res) => {
     renderStory(res, story);
 });
 
-router.get('/local-news/:storyNumber', async (req, res) => {
-    // Accessing the storyNumber parameter from the URL and converting it to a number
-    const storyNumber = parseInt(req.params.storyNumber, 10);
+router.get('/local-news/:id', async (req, res) => {
+    // Accessing the id parameter from the URL and converting it to a number
+    const id = parseInt(req.params.id, 10);
 
-    // Check if storyNumber is a valid number
-    if (isNaN(storyNumber)) {
+    // Check if id is a valid number
+    if (isNaN(id)) {
         return res.status(400).send('Story number must be a valid number');
     }
 
     const keyCharacterRepo = Container.get(IKeyCharacterRepositoryToken);
-    const savedStory = await keyCharacterRepo.getKeyCharacter(storyNumber);
+    const savedStory = await keyCharacterRepo.getKeyCharacter(id);
 
     renderStory(res, savedStory);
 
