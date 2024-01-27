@@ -23,26 +23,35 @@ export class KeyCharacterMemoryRepository extends IKeyCharacterRepository{
         super();
     }
 
-    addKeyCharacter(character: KeyCharacter): number {
-        const currentMaxIndex = this.getMaxId();
-        const nextMaxIndex: number = currentMaxIndex ? currentMaxIndex + 1 : 1 ;
-        
-        this._KeyCharacterStore[nextMaxIndex] = character;
+    addKeyCharacter(character: KeyCharacter): Promise<number> {
+        return new Promise((resolve, reject) => {
+            const currentMaxIndex = this.getMaxId();
+            const nextMaxIndex: number = currentMaxIndex ? currentMaxIndex + 1 : 1 ;
+            
+            this._KeyCharacterStore[nextMaxIndex] = character;
+    
+            resolve(nextMaxIndex);
+        })
 
-        return nextMaxIndex;
+
+
     }
 
-    getKeyCharacter(id: number): KeyCharacter {
-        if(!this._KeyCharacterStore){
-            throw new Error("Memory store not instantiated.");
-        }
-        const result = this._KeyCharacterStore[id];
-        if(!result){
-            const warning = `A request has been made for a key character id (${id}) that does not exist`
-            console.warn(warning)
-            throw new Error(warning);          
-        }
-        return result;
+    getKeyCharacter(id: number): Promise<KeyCharacter> {
+        return new Promise((resolve, reject) => {
+            if (!this._KeyCharacterStore) {
+                reject(new Error("Memory store not instantiated."));
+            } else {
+                const result = this._KeyCharacterStore[id];
+                if (!result) {
+                    const warning = `A request has been made for a key character id (${id}) that does not exist`;
+                    console.warn(warning);
+                    reject(new Error(warning));
+                } else {
+                    resolve(result);
+                }
+            }
+        });
     }
 
     private getMaxId(): number | null{

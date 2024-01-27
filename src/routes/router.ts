@@ -1,19 +1,31 @@
-import { Router } from 'express';
+import { Router, Response } from 'express';
 import { KeyCharacter } from '../models/KeyCharacter';
 import Container from 'typedi';
 import { IKeyCharacterRepository, IKeyCharacterRepositoryToken } from '../infrastructure/interfaces/key-character-repository';
 
+function renderStory(res: Response, story: KeyCharacter) {
+    res.render('story', story);
+}
+
+function renderPageWithTitle(res: Response, page: string, title: string) {
+    res.render(page, { title });
+}
+
 const router = Router()
 
-router.get('/', async (req, res) => res.render('index', {title: "My first website", p1: "This website uses ejs syntax to interpolate data into ejs files which create html pages"}))
-router.get('/about', async (req, res) => res.render('about', {title: "About"}))
+router.get('/', async (req, res) => renderPageWithTitle(res, 'index', 'My Node Website'))
 
-router.get('/create-story', async (req, res) => res.render('create-story', {title: "Create Story"}))
+router.get('/about', async (req, res) => renderPageWithTitle(res, "about", "About"))
+
+router.get('/create-story', async (req, res) => renderPageWithTitle(res, "create-story", "Create Story"));
+
 router.get('/example', async (req, res) => {
     const keyCharacterRepo = Container.get(IKeyCharacterRepositoryToken);
-    const story = keyCharacterRepo.getKeyCharacter(0);
-    res.render('story', story)
-})
+    const story = await keyCharacterRepo.getKeyCharacter(0);
+    
+    renderStory(res, story);
+});
+
 router.get('/local-news/:storyNumber', async (req, res) => {
     // Accessing the storyNumber parameter from the URL and converting it to a number
     const storyNumber = parseInt(req.params.storyNumber, 10);
@@ -24,21 +36,23 @@ router.get('/local-news/:storyNumber', async (req, res) => {
     }
 
     const keyCharacterRepo = Container.get(IKeyCharacterRepositoryToken);
-    const savedStory = keyCharacterRepo.getKeyCharacter(storyNumber);
-    res.render('story', savedStory);
-})
+    const savedStory = await keyCharacterRepo.getKeyCharacter(storyNumber);
 
-router.post('/submit-form', (req, res) => {
-    const body: KeyCharacter = req.body;
+    renderStory(res, savedStory);
+
+});
+
+router.post('/submit-form', async (req, res) => {
+    const character: KeyCharacter = req.body;  
 
     const keyCharacterRepo = Container.get(IKeyCharacterRepositoryToken);
     
     // TODO: update this, to show the form that's just been submitted along with a url to the story
     // Possiblity to PUT request to the form
-    const newStoryKey = keyCharacterRepo.addKeyCharacter(body);
-    console.log(`Current story number: ${newStoryKey}`)
-    const newStory = keyCharacterRepo.getKeyCharacter(newStoryKey);
-    res.render('story', newStory)
+    const newStoryKey = await keyCharacterRepo.addKeyCharacter(character);
+    const newStory = await keyCharacterRepo.getKeyCharacter(newStoryKey);
+
+    renderStory(res, newStory);
     
 });
 

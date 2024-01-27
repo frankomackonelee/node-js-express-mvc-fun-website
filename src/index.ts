@@ -9,6 +9,10 @@ import { KeyCharacterMemoryRepository } from './infrastructure/repositories/key-
 // Set up a DI container and register implementation...
 Container.set(IKeyCharacterRepositoryToken, new KeyCharacterMemoryRepository());
 
+import dotenv from 'dotenv';
+dotenv.config();
+
+console.log(process.env.ENVIRONMENT);
 
 const app = express();
 
