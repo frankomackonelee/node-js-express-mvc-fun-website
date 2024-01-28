@@ -1,6 +1,7 @@
 import { Service } from 'typedi';
 import { KeyCharacter } from "../../models/KeyCharacter";
 import { IKeyCharacterRepository } from "../interfaces/key-character-repository";
+import { KeyCharacterNotFoundError } from '../../errors/key-character-not-found-error';
 
 @Service()
 export class KeyCharacterMemoryRepository extends IKeyCharacterRepository{
@@ -51,7 +52,7 @@ export class KeyCharacterMemoryRepository extends IKeyCharacterRepository{
                 if (!result) {
                     const warning = `A request has been made for a key character id (${id}) that does not exist`;
                     console.warn(warning);
-                    reject(new Error(warning));
+                    reject(new KeyCharacterNotFoundError(warning));
                 } else {
                     resolve(result);
                 }

@@ -2,6 +2,7 @@ import { Router, Response } from 'express';
 import { KeyCharacter } from '../models/KeyCharacter';
 import Container from 'typedi';
 import { IKeyCharacterRepository, IKeyCharacterRepositoryToken } from '../infrastructure/interfaces/key-character-repository';
+import { KeyCharacterNotFoundError } from '../errors/key-character-not-found-error';
 
 function renderStory(res: Response, story: KeyCharacter) {
     res.render('story', story);
@@ -56,39 +57,63 @@ router.get('/example', async (req, res) => {
 });
 
 router.get('/local-news/:id', async (req, res) => {
-    // Accessing the id parameter from the URL and converting it to a number
-    const id = parseInt(req.params.id, 10);
+    try{
+        // Accessing the id parameter from the URL and converting it to a number
+        const id = parseInt(req.params.id, 10);
 
-    // Check if id is a valid number
-    if (isNaN(id)) {
-        return res.status(400).send('Story number must be a valid number');
+        // Check if id is a valid number
+        if (isNaN(id)) {
+            return res.status(400).send('Story number must be a valid number');
+        }
+
+        const keyCharacterRepo = Container.get(IKeyCharacterRepositoryToken);
+
+        const savedStory = await keyCharacterRepo.getKeyCharacter(id);
+
+        renderStory(res, savedStory);
+    }catch(error){
+
+        if (error instanceof KeyCharacterNotFoundError) {
+            renderPageWithTitle(res.status(404),'not-found','Not Found');
+        }else{
+            res.status(500).send("Internal server error")
+        }
     }
-
-    const keyCharacterRepo = Container.get(IKeyCharacterRepositoryToken);
-    const savedStory = await keyCharacterRepo.getKeyCharacter(id);
-
-    renderStory(res, savedStory);
 
 });
 
 router.get('/submit-form/:id', async (req, res) => {
+    try{
+        const id = parseInt(req.params.id, 10);
 
-    const id = parseInt(req.params.id, 10);
+        const uid = '';
 
-    const uid = '';
+        const keyCharacterRepo = Container.get(IKeyCharacterRepositoryToken);
 
-    const keyCharacterRepo = Container.get(IKeyCharacterRepositoryToken);
-    const character = await keyCharacterRepo.getKeyCharacter(id);
+        const character = await keyCharacterRepo.getKeyCharacter(id);
 
-    const data: creatPageData = {
-        title: "Edit Story",
-        isEditMode: true,
-        id,
-        uid,
-        ...character
-    };
+        const data: creatPageData = {
+            title: "Edit Story",
+            isEditMode: true,
+            id,
+            uid,
+            ...character
+        };
+    
+        renderFormSubmission(res, data);
 
-    renderFormSubmission(res, data);
+    }catch(error){
+
+        if (error instanceof KeyCharacterNotFoundError) {
+            renderPageWithTitle(res.status(404),'not-found','Not Found');
+        }else{
+            res.status(500).send("Internal server error")
+        }
+
+    }
+
+
+
     
 });
 
@@ -99,28 +124,38 @@ router.get('/not-found', (req, res) => {
 });
 
 router.post('/submit-form/:id', async (req, res) => {
+    
+    try{
+        if(req.body._method !== "PUT"){
+            return res.status(400).send('Invalid request');
+        }
+    
+        const id = parseInt(req.params.id, 10);
+        const uid = req.body.uid;
+    
+        const character: KeyCharacter = req.body;  
+        const keyCharacterRepo = Container.get(IKeyCharacterRepositoryToken);
+        await keyCharacterRepo.editKeyCharacter(id, character);
+    
+        const data: creatPageData = {
+            title: "Edit Story",
+            isEditMode: true,
+            id,
+            uid,
+            ...character
+        };
+    
+        renderFormSubmission(res, data);
+    }catch(error){
 
-    if(req.body._method !== "PUT"){
-        return res.status(400).send('Invalid request');
+        if (error instanceof KeyCharacterNotFoundError) {
+            renderPageWithTitle(res.status(404),'not-found','Not Found');
+        }else{
+            res.status(500).send("Internal server error")
+        }
+
     }
 
-    const id = parseInt(req.params.id, 10);
-    const uid = req.body.uid;
-
-    const character: KeyCharacter = req.body;  
-    const keyCharacterRepo = Container.get(IKeyCharacterRepositoryToken);
-    await keyCharacterRepo.editKeyCharacter(id, character);
-
-    const data: creatPageData = {
-        title: "Edit Story",
-        isEditMode: true,
-        id,
-        uid,
-        ...character
-    };
-
-    renderFormSubmission(res, data);
-    
 });
 
 router.post('/submit-form', async (req, res) => {
