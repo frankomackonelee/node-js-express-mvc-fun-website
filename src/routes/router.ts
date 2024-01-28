@@ -87,6 +87,9 @@ router.get('/submit-form/:id', async (req, res) => {
     
 });
 
+router.get('/not-found', (req, res) => {
+    renderPageWithTitle(res.status(404),'not-found','Not Found');
+});
 
 router.post('/submit-form/:id', async (req, res) => {
 

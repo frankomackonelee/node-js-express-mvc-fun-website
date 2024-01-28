@@ -1,7 +1,7 @@
-import express from 'express';
-import { dirname, join } from 'path';
-import { fileURLToPath } from 'url';
+import express, { Request, Response, NextFunction } from 'express';
+import { join } from 'path';
 import { Container } from 'typedi';
+import createError from 'http-errors';
 import indexRoutes from './routes/router.js'
 import { IKeyCharacterRepository, IKeyCharacterRepositoryToken } from './infrastructure/interfaces/key-character-repository.js';
 import { KeyCharacterMemoryRepository } from './infrastructure/repositories/key-character-memory-repo.js';
@@ -28,7 +28,29 @@ app.use( indexRoutes );
 // To make public files available to the client ui
 app.use(express.static(join(__dirname, 'public')))
 
+// Catch-all middleware this is a fall through to create 404 Not Found if unmatched
+app.use((req: Request, res: Response, next: NextFunction) => {
+    next(createError(404));
+});
+
+// Error handling middleware
+// Initially this is just used to manage unmatched url requests
+app.use((err: any, req: Request, res: Response, next: NextFunction) => {
+    // Set locals, only providing error in development
+    res.locals.message = err.message;
+    res.locals.error = process.env.ENVIRONMENT === 'development' ? err : {};
+
+    // Render the error page
+    res.status(err.status || 500);
+    if (err.status === 404) {
+        res.redirect('/not-found');
+    } else {
+        res.send('Error');
+    }
+});
+
 const port = 3000;
 
 app.listen(port);
+
 console.log('Server is listening on port', port);

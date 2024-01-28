@@ -19,9 +19,19 @@ The project has been extended to add fuctionality and the following features
 - static element of content was generated with chat GPT
 - ability to edit the story immediately following a submission
 
-## Limitations / TODO List
-- Restrict PUT access to original author (hack) using uid returned to original request
-- Improve security around user generated content (UGC)
+### To run the project
+
+```bash
+npn init
+npm run dev
+```
+ 
+The node.js server will run at localhost:30000 by default
+
+## TODO List (Also documents limiations!)
+- Add a fall back url
+- Restrict PUT access to original author (hack) using uid added to cookies of the browser making original request
+- Improve security around user generated content (UGC) vs XSS and 
 - Add form validation for input of UGC
 - Add proper persistency layer and instructions to switch between so you can run project locally with or without a persistency layer 
 - The edit form uses a common technique to edit the value but it does not comply with REST
@@ -35,11 +45,3 @@ The project has been extended to add fuctionality and the following features
 
 These instructions will get you a copy of the project up and running on your local machine for development and testing purposes.
 
-### To run the project
-
-```bash
-npn init
-npm run dev
-```
- 
-The node.js server will run at localhost:30000
