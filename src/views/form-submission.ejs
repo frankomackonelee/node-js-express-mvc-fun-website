@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+    <%- include('partials/head') %>
+</head>
+<body>
+    <%- include('partials/navigation') %>
+    <main class="main-content container">
+        <div class="card bg-dark text-white text-center">
+            <div class="card-header">
+                <h3>See Your Story</h3>
+            </div>
+            <div class="card-body text-start">
+                <!-- Display the URL -->
+                <div>
+                    <a id="storyUrl" href="<%= baseUrl %>/local-news/<%= id %>"><%= baseUrl %>/local-news/<%= id %></a>
+                </div>
+                
+                <!-- Button to copy the URL -->
+                <div class="d-flex justify-content-end">
+                    <button class="btn btn-primary ms-auto" onclick="copyToClipboard()">Copy URL</button>
+                </div>
+
+            </div>
+        </div>
+    </main>
+    <%- include('partials/footer') %>
+
+    <script>
+        // JavaScript function to copy the URL to clipboard
+        function copyToClipboard() {
+            // Get the text from the paragraph
+            var url = document.getElementById('storyUrl').innerText;
+    
+            // Create a temporary input field to hold the text
+            var tempInput = document.createElement('input');
+            tempInput.value = url;
+            document.body.appendChild(tempInput);
+            tempInput.select();
+    
+            // Copy the text inside the input field
+            document.execCommand('copy');
+    
+            // Remove the temporary input field
+            document.body.removeChild(tempInput);
+    
+            // Optional: Display an alert or change the button text to indicate success
+            alert('URL copied to clipboard!');
+        }
+    </script>
+
+</body>
+</html>

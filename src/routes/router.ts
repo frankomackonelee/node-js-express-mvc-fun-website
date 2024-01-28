@@ -22,6 +22,10 @@ function renderCreateStoryPage(res: Response, data: creatPageData) {
     res.render("create-story", { ...data });
 }
 
+function renderFormSubmission(res: Response, data: { title: string, id: number }) {
+    res.render("form-submission", { ...data, baseUrl: process.env.BASE_URL });
+}
+
 const router = Router()
 
 router.get('/', async (req, res) => renderPageWithTitle(res, 'index', 'My Node Website'))
@@ -44,6 +48,7 @@ router.get('/create-story', async (req, res) => {
 });
 
 router.get('/example', async (req, res) => {
+
     const keyCharacterRepo = Container.get(IKeyCharacterRepositoryToken);
     const story = await keyCharacterRepo.getKeyCharacter(0);
     
@@ -83,12 +88,14 @@ router.get('/submit-form/:id', async (req, res) => {
         ...character
     };
 
-    renderCreateStoryPage(res, data);
+    renderFormSubmission(res, data);
     
 });
 
 router.get('/not-found', (req, res) => {
+
     renderPageWithTitle(res.status(404),'not-found','Not Found');
+    
 });
 
 router.post('/submit-form/:id', async (req, res) => {
@@ -112,7 +119,7 @@ router.post('/submit-form/:id', async (req, res) => {
         ...character
     };
 
-    renderCreateStoryPage(res, data);
+    renderFormSubmission(res, data);
     
 });
 
@@ -132,7 +139,7 @@ router.post('/submit-form', async (req, res) => {
         ...newStory
     }
 
-    renderCreateStoryPage(res, data);
+    renderFormSubmission(res, data);
     
 });
 

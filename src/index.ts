@@ -42,6 +42,7 @@ app.use((err: any, req: Request, res: Response, next: NextFunction) => {
 
     // Render the error page
     res.status(err.status || 500);
+
     if (err.status === 404) {
         res.redirect('/not-found');
     } else {
