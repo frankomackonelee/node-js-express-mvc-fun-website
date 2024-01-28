@@ -30,6 +30,7 @@ npm run dev
 The node.js server will run at localhost:30000 by default
 
 ## TODO List (Also documents limiations!)
+- Visiting http://localhost:3000/local-news/999 needs to go to 404 page
 - Restrict PUT access to original author (hack) using uid added to cookies of the browser making original request
 - Improve security around user generated content (UGC) vs XSS and SQL Injection
 - Add form validation for input of UGC
