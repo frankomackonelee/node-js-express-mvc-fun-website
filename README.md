@@ -20,7 +20,10 @@ The project has been extended to add fuctionality and the following features
 - ability to edit the story immediately following a submission
 - adding a 404 page via 302 redirect
 
-### To run the project
+## Getting Started: to run the project
+
+- Pull the repo
+- install node (setup with 18.17.0)
 
 ```bash
 npn init
@@ -40,8 +43,4 @@ The node.js server will run at localhost:30000 by default
 - Create CI/CD pipeline 
 - Currently run dev just runs typescript and serves, need to get nodemon or similar working so that it 'hot reloads' / watches ts and other files
 - Restrict PUT access to original author (properly) via authentication / authorization
-
-## Getting Started
-
-These instructions will get you a copy of the project up and running on your local machine for development and testing purposes.
 
