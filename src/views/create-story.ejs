@@ -18,7 +18,6 @@
                 <form action="<%= isEditMode ? '/submit-form/' + id : '/submit-form' %>" method="post">
                     <% if (isEditMode) { %>
                         <input type="hidden" name="_method" value="PUT">
-                        <input type="hidden" name="uid" value="<%= uid %>">
                     <% } %>
 
                     <div class="mb-3">

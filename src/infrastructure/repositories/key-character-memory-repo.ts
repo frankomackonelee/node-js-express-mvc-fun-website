@@ -2,6 +2,8 @@ import { Service } from 'typedi';
 import { KeyCharacter } from "../../models/KeyCharacter";
 import { IKeyCharacterRepository } from "../interfaces/key-character-repository";
 import { KeyCharacterNotFoundError } from '../../errors/key-character-not-found-error';
+import crypto from 'crypto';
+import { NotAuthorisedError } from '../../errors/not-authorised-error';
 
 @Service()
 export class KeyCharacterMemoryRepository extends IKeyCharacterRepository{
@@ -9,14 +11,15 @@ export class KeyCharacterMemoryRepository extends IKeyCharacterRepository{
     private readonly defaultIndex: number = 0;
 
     private _KeyCharacterStore: {
-        [index in number]: KeyCharacter
+        [index in number]: KeyCharacter & {uid: string }
     } = {
         [this.defaultIndex]: {
             location: "Penzance",
             firstName: "Franko",
             lastName: "Lee",
             age: 43,
-            description: "father of 2"
+            description: "father of 2",
+            uid: ""
         }
     };
 
@@ -24,22 +27,33 @@ export class KeyCharacterMemoryRepository extends IKeyCharacterRepository{
         super();
     }
 
-    addKeyCharacter(character: KeyCharacter): Promise<number> {
+    addKeyCharacter(character: KeyCharacter): Promise<{ id: number, uid: string }> {
         return new Promise((resolve, reject) => {
             const currentMaxIndex = this.getMaxId();
             const nextMaxIndex: number = currentMaxIndex ? currentMaxIndex + 1 : 1 ;
             
-            this._KeyCharacterStore[nextMaxIndex] = character;
+            const uid = this.generateUID();
+
+            this._KeyCharacterStore[nextMaxIndex] = {...character, uid};
     
-            resolve(nextMaxIndex);
+            resolve({id: nextMaxIndex, uid: "abc"});
         })
     }
 
-    editKeyCharacter(id: number, character: KeyCharacter): Promise<number> {
+    editKeyCharacter(id: number, character: KeyCharacter, authorisedUids: string[]): Promise<number> {
         return new Promise((resolve, reject) => {
-            this._KeyCharacterStore[id] = character;
-    
-            resolve(id);
+
+            if(this.isAuthorised(id, authorisedUids)){
+                const currentCharacter = this._KeyCharacterStore[id];
+                const uid = currentCharacter.uid;
+
+                this._KeyCharacterStore[id] = {...character, uid};
+
+                resolve(id);
+            }else{
+                reject(new NotAuthorisedError(`Request to edit ${id} is made by invalid browser`));
+            }
+
         })
     }
 
@@ -60,6 +74,10 @@ export class KeyCharacterMemoryRepository extends IKeyCharacterRepository{
         });
     }
 
+    private isAuthorised(id: number, authorisedUids: string[]): boolean{
+        return false;
+    }
+
     private getMaxId(): number | null{
         let maxIndex: number | null = null;
         for (const key in this._KeyCharacterStore) {
@@ -72,6 +90,10 @@ export class KeyCharacterMemoryRepository extends IKeyCharacterRepository{
             }
         }
         return maxIndex;
+    }
+
+    private generateUID() {
+        return crypto.randomBytes(16).toString('hex');
     }
 
 }

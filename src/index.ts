@@ -2,7 +2,7 @@ import express, { Request, Response, NextFunction } from 'express';
 import { join } from 'path';
 import { Container } from 'typedi';
 import createError from 'http-errors';
-import indexRoutes from './routes/router.js'
+import indexRoutes, { renderPageWithTitle } from './controllers/controllers'
 import { IKeyCharacterRepository, IKeyCharacterRepositoryToken } from './infrastructure/interfaces/key-character-repository.js';
 import { KeyCharacterMemoryRepository } from './infrastructure/repositories/key-character-memory-repo.js';
 
@@ -10,6 +10,8 @@ import { KeyCharacterMemoryRepository } from './infrastructure/repositories/key-
 Container.set(IKeyCharacterRepositoryToken, new KeyCharacterMemoryRepository());
 
 import dotenv from 'dotenv';
+import { KeyCharacterNotFoundError } from './errors/key-character-not-found-error';
+import { NotAuthorisedError } from './errors/not-authorised-error';
 dotenv.config();
 
 console.log(process.env.ENVIRONMENT);
@@ -38,15 +40,27 @@ app.use((req: Request, res: Response, next: NextFunction) => {
 app.use((err: any, req: Request, res: Response, next: NextFunction) => {
     // Set locals, only providing error in development
     res.locals.message = err.message;
-    res.locals.error = process.env.ENVIRONMENT === 'development' ? err : {};
+    res.locals.error = process.env.ENVIRONMENT === 'development' ? err : {};;
 
-    // Render the error page
-    res.status(err.status || 500);
+    if (err instanceof KeyCharacterNotFoundError) {
 
-    if (err.status === 404) {
+        // The browser does not navigate away from the requested url
+        renderPageWithTitle(res.status(404), 'not-found', 'Not Found');
+
+    } else if (err instanceof NotAuthorisedError) {
+
+        res.status(403).send("not authorised you naughty person");
+
+    } if (err.status === 404) {
+
+        // This handles the catchall case above, and leads to a 302 being sent back to client which the client follows
+        // By doing this the browser navigates to /not-found
         res.redirect('/not-found');
+
     } else {
-        res.send('Error');
+
+        res.status(500).send('Server Error');
+
     }
 });
 

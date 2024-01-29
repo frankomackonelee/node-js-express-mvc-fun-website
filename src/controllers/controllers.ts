@@ -8,7 +8,7 @@ function renderStory(res: Response, story: KeyCharacter) {
     res.render('story', story);
 }
 
-function renderPageWithTitle(res: Response, page: string, title: string) {
+export function renderPageWithTitle(res: Response, page: string, title: string) {
     res.render(page, { title });
 }
 
@@ -16,7 +16,6 @@ interface creatPageData extends KeyCharacter {
     title: string,
     isEditMode: boolean,
     id: number,
-    uid: string,
 }
 
 function renderCreateStoryPage(res: Response, data: creatPageData) {
@@ -38,7 +37,6 @@ router.get('/create-story', async (req, res) => {
         title: "Create Story",
         isEditMode: false,
         id: 0,
-        uid: '',
         location: '',
         firstName: '',
         lastName: '',
@@ -56,7 +54,7 @@ router.get('/example', async (req, res) => {
     renderStory(res, story);
 });
 
-router.get('/local-news/:id', async (req, res) => {
+router.get('/local-news/:id', async (req, res, next) => {
     try{
         // Accessing the id parameter from the URL and converting it to a number
         const id = parseInt(req.params.id, 10);
@@ -73,16 +71,13 @@ router.get('/local-news/:id', async (req, res) => {
         renderStory(res, savedStory);
     }catch(error){
 
-        if (error instanceof KeyCharacterNotFoundError) {
-            renderPageWithTitle(res.status(404),'not-found','Not Found');
-        }else{
-            res.status(500).send("Internal server error")
-        }
+        next(error)
+
     }
 
 });
 
-router.get('/submit-form/:id', async (req, res) => {
+router.get('/submit-form/:id', async (req, res, next) => {
     try{
         const id = parseInt(req.params.id, 10);
 
@@ -96,19 +91,14 @@ router.get('/submit-form/:id', async (req, res) => {
             title: "Edit Story",
             isEditMode: true,
             id,
-            uid,
             ...character
         };
     
-        renderFormSubmission(res, data);
+        renderCreateStoryPage(res, data);
 
     }catch(error){
 
-        if (error instanceof KeyCharacterNotFoundError) {
-            renderPageWithTitle(res.status(404),'not-found','Not Found');
-        }else{
-            res.status(500).send("Internal server error")
-        }
+        next(error)
 
     }
 
@@ -123,7 +113,26 @@ router.get('/not-found', (req, res) => {
     
 });
 
-router.post('/submit-form/:id', async (req, res) => {
+router.post('/submit-form', async (req, res) => {
+    const character: KeyCharacter = req.body;  
+
+    const keyCharacterRepo = Container.get(IKeyCharacterRepositoryToken);
+    
+    const { id, uid } = await keyCharacterRepo.addKeyCharacter(character);
+    const newStory = await keyCharacterRepo.getKeyCharacter(id);
+
+    const data: creatPageData = {
+        title: "Edit Story",
+        isEditMode: true,
+        id,
+        ...newStory
+    }
+
+    renderFormSubmission(res, data);
+    
+});
+
+router.post('/submit-form/:id', async (req, res, next) => {
     
     try{
         if(req.body._method !== "PUT"){
@@ -135,47 +144,23 @@ router.post('/submit-form/:id', async (req, res) => {
     
         const character: KeyCharacter = req.body;  
         const keyCharacterRepo = Container.get(IKeyCharacterRepositoryToken);
-        await keyCharacterRepo.editKeyCharacter(id, character);
+        await keyCharacterRepo.editKeyCharacter(id, character, []);
     
         const data: creatPageData = {
             title: "Edit Story",
             isEditMode: true,
             id,
-            uid,
             ...character
         };
     
         renderFormSubmission(res, data);
+        
     }catch(error){
 
-        if (error instanceof KeyCharacterNotFoundError) {
-            renderPageWithTitle(res.status(404),'not-found','Not Found');
-        }else{
-            res.status(500).send("Internal server error")
-        }
+        next(error)
 
     }
 
-});
-
-router.post('/submit-form', async (req, res) => {
-    const character: KeyCharacter = req.body;  
-
-    const keyCharacterRepo = Container.get(IKeyCharacterRepositoryToken);
-    
-    const newStoryKey = await keyCharacterRepo.addKeyCharacter(character);
-    const newStory = await keyCharacterRepo.getKeyCharacter(newStoryKey);
-
-    const data: creatPageData = {
-        title: "Edit Story",
-        isEditMode: true,
-        id: newStoryKey,
-        uid: "abcde",
-        ...newStory
-    }
-
-    renderFormSubmission(res, data);
-    
 });
 
 export default router;
