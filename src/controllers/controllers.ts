@@ -128,6 +128,7 @@ router.post('/submit-form', async (req, res) => {
         ...newStory
     }
 
+    // TODO: Set cookie here
     renderFormSubmission(res, data);
     
 });
@@ -144,6 +145,7 @@ router.post('/submit-form/:id', async (req, res, next) => {
     
         const character: KeyCharacter = req.body;  
         const keyCharacterRepo = Container.get(IKeyCharacterRepositoryToken);
+        // TODO: Reading the cookies needed here
         await keyCharacterRepo.editKeyCharacter(id, character, []);
     
         const data: creatPageData = {

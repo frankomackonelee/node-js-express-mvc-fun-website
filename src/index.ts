@@ -49,6 +49,7 @@ app.use((err: any, req: Request, res: Response, next: NextFunction) => {
 
     } else if (err instanceof NotAuthorisedError) {
 
+        // TODO: render view (maybe do redirect...)
         res.status(403).send("not authorised you naughty person");
 
     } if (err.status === 404) {

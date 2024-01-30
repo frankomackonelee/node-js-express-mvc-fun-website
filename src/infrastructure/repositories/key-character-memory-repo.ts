@@ -75,7 +75,8 @@ export class KeyCharacterMemoryRepository extends IKeyCharacterRepository{
     }
 
     private isAuthorised(id: number, authorisedUids: string[]): boolean{
-        return false;
+        //TODO: implement logic here...
+        return true;
     }
 
     private getMaxId(): number | null{
