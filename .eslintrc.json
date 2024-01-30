@@ -14,5 +14,6 @@
     "env": {
         "node": true,
         "es6": true
-    }
+    },
+    "ignorePatterns": ["jest.config.js"]
 }
