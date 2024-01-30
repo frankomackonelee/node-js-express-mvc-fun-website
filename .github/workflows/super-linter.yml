@@ -29,3 +29,12 @@ jobs:
           VALIDATE_ALL_CODEBASE: false
           DEFAULT_BRANCH: "main"
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Unit tests
+        uses: actions/setup-node@v2
+        with: 
+          node-version: 18.17.x
+      - run: npm ci
+      - run: npm jest
+  
+  
