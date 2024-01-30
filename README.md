@@ -19,7 +19,7 @@ The project has been extended to add fuctionality and the following features
 - static element of content was generated with chat GPT
 - ability to edit the story immediately following a submission
 - adding a 404 page via 302 redirect
-- CI/** - Github Action to lint the project on push to any branch and pull to main
+- CI/** - GitHub Action to lint the project on push to any branch and pull to main
 
 ## Getting Started: to run the project
 
@@ -41,8 +41,8 @@ The Node.js server will run at localhost:30000 by default
 - The edit form uses a common technique to edit the value but it does not comply with REST
 - Deploy to server
 - Add custom URL
-- Enhance CI Github Action to include tests
-- Add CD Github Action
+- Enhance CI GitHub Action to include tests, and ensure ts-standard is enforced
+- Add CD GitHub Action
 - Currently run dev just runs TypeScript and serves, need to get nodemon or similar working so that it 'hot reloads' / watches ts and other files
 - Restrict PUT access to original author (properly) via authentication / authorization
 
