@@ -1,6 +1,6 @@
 # Node.js Fun Site
 
-This is a fun site created quickly to remind myself how to use Node.js.  It is intended to show my ability to work quckly with unfamiliar tools as I've spent a few hours each evening over a week doing it.   Setting up a Node.js server with Typescript support and DI is new to me as is mvc pattern.
+This is a fun site created quickly to remind myself how to use Node.js.  It is intended to show my ability to work quckly with unfamiliar tools as I've spent a few hours each evening over a week doing it.   Setting up a Node.js server with TypeScript support and DI is new to me as is mvc pattern.
 
 This project isn't intended to be production ready, I simply want to investigate how things could be done, or to remind myself how to set some of this stuff up, and I want anyone looking at my repository to get an idea of my ability to prototype with unfamiliar tools.
 
@@ -13,7 +13,7 @@ The tutorial uses
 
 The project has been extended to add fuctionality and the following features
 - added DALLE generated icon and favicon
-- supports Typescript
+- supports TypeScript
 - dependency injection (I realise this might look like overkill, but v. easy to implement and I want to be able to switch between an ACTUAL and a MOCKED persistency layer, and I think this is easier to do if you have worked to an interface originally)
 - create a 'permanent' web page with the contents of a form via form submission, which is saved in an in-memory collection
 - static element of content was generated with chat GPT
@@ -41,6 +41,6 @@ The Node.js server will run at localhost:30000 by default
 - Deploy to server
 - Add custom URL
 - Create CI/CD pipeline
-- Currently run dev just runs Typescript and serves, need to get nodemon or similar working so that it 'hot reloads' / watches ts and other files
+- Currently run dev just runs TypeScript and serves, need to get nodemon or similar working so that it 'hot reloads' / watches ts and other files
 - Restrict PUT access to original author (properly) via authentication / authorization
 
