@@ -35,6 +35,6 @@ jobs:
         with: 
           node-version: 18.17.x
       - run: npm ci
-      - run: npm jest
+      - run: npm run test
   
   
