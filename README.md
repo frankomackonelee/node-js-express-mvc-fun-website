@@ -20,6 +20,7 @@ The project has been extended to add fuctionality and the following features
 - ability to edit the story immediately following a submission
 - adding a 404 page via 302 redirect
 - CI/** - GitHub Action to lint the project on push to any branch and pull to main
+- GitHub rule to prevent direct push to main
 
 ## Getting Started: to run the project
 
