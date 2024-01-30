@@ -28,7 +28,7 @@ export class KeyCharacterMemoryRepository extends IKeyCharacterRepository{
     }
 
     addKeyCharacter(character: KeyCharacter): Promise<{ id: number, uid: string }> {
-        return new Promise((resolve, reject) => {
+        return new Promise((resolve) => {
             const currentMaxIndex = this.getMaxId();
             const nextMaxIndex: number = currentMaxIndex ? currentMaxIndex + 1 : 1 ;
             
@@ -76,6 +76,8 @@ export class KeyCharacterMemoryRepository extends IKeyCharacterRepository{
 
     private isAuthorised(id: number, authorisedUids: string[]): boolean{
         //TODO: implement logic here...
+        console.log(id);
+        console.log(authorisedUids);
         return true;
     }
 

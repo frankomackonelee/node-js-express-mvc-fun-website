@@ -3,7 +3,7 @@ import { join } from 'path';
 import { Container } from 'typedi';
 import createError from 'http-errors';
 import indexRoutes, { renderPageWithTitle } from './controllers/controllers'
-import { IKeyCharacterRepository, IKeyCharacterRepositoryToken } from './infrastructure/interfaces/key-character-repository.js';
+import { IKeyCharacterRepositoryToken } from './infrastructure/interfaces/key-character-repository.js';
 import { KeyCharacterMemoryRepository } from './infrastructure/repositories/key-character-memory-repo.js';
 
 // Set up a DI container and register implementation...
@@ -37,10 +37,12 @@ app.use((req: Request, res: Response, next: NextFunction) => {
 
 // Error handling middleware
 // Initially this is just used to manage unmatched url requests
-app.use((err: any, req: Request, res: Response, next: NextFunction) => {
+app.use((err: unknown, req: Request, res: Response) => {
     // Set locals, only providing error in development
-    res.locals.message = err.message;
-    res.locals.error = process.env.ENVIRONMENT === 'development' ? err : {};;
+    const error = err as Error&{ status: number };
+
+    res.locals.message = error.message;
+    res.locals.error = process.env.ENVIRONMENT === 'development' ? err : {};
 
     if (err instanceof KeyCharacterNotFoundError) {
 
@@ -52,7 +54,7 @@ app.use((err: any, req: Request, res: Response, next: NextFunction) => {
         // TODO: render view (maybe do redirect...)
         res.status(403).send("not authorised you naughty person");
 
-    } if (err.status === 404) {
+    } if (error.status === 404) {
 
         // This handles the catchall case above, and leads to a 302 being sent back to client which the client follows
         // By doing this the browser navigates to /not-found
@@ -63,6 +65,7 @@ app.use((err: any, req: Request, res: Response, next: NextFunction) => {
         res.status(500).send('Server Error');
 
     }
+
 });
 
 const port = 3000;

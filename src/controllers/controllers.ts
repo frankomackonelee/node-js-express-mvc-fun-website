@@ -1,8 +1,7 @@
 import { Router, Response } from 'express';
 import { KeyCharacter } from '../models/KeyCharacter';
 import Container from 'typedi';
-import { IKeyCharacterRepository, IKeyCharacterRepositoryToken } from '../infrastructure/interfaces/key-character-repository';
-import { KeyCharacterNotFoundError } from '../errors/key-character-not-found-error';
+import { IKeyCharacterRepositoryToken } from '../infrastructure/interfaces/key-character-repository';
 
 function renderStory(res: Response, story: KeyCharacter) {
     res.render('story', story);
@@ -81,8 +80,6 @@ router.get('/submit-form/:id', async (req, res, next) => {
     try{
         const id = parseInt(req.params.id, 10);
 
-        const uid = '';
-
         const keyCharacterRepo = Container.get(IKeyCharacterRepositoryToken);
 
         const character = await keyCharacterRepo.getKeyCharacter(id);
@@ -118,7 +115,7 @@ router.post('/submit-form', async (req, res) => {
 
     const keyCharacterRepo = Container.get(IKeyCharacterRepositoryToken);
     
-    const { id, uid } = await keyCharacterRepo.addKeyCharacter(character);
+    const { id } = await keyCharacterRepo.addKeyCharacter(character);
     const newStory = await keyCharacterRepo.getKeyCharacter(id);
 
     const data: creatPageData = {
@@ -141,7 +138,6 @@ router.post('/submit-form/:id', async (req, res, next) => {
         }
     
         const id = parseInt(req.params.id, 10);
-        const uid = req.body.uid;
     
         const character: KeyCharacter = req.body;  
         const keyCharacterRepo = Container.get(IKeyCharacterRepositoryToken);
