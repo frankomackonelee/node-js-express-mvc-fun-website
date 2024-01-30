@@ -9,6 +9,6 @@ describe('KeyCharacterMemoryRepository', () => {
         // const response = await _systemUnderTest.getKeyCharacter(0);
 
         // Assert
-        expect(true).toBe(true);
+        expect(true).toBe(false);
     })
 });
