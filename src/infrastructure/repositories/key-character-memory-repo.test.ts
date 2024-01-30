@@ -1,14 +1,17 @@
-
+import { KeyCharacterMemoryRepository } from "./key-character-memory-repo";
 
 describe('KeyCharacterMemoryRepository', () => {
-    it('should get a default character successfully', async () => {
+
+    it('should get a default character with location Penzance successfully', async () => {
         // Arrange
-        // const _systemUnderTest = new KeyCharacterMemoryRepository();
+        const _systemUnderTest = new KeyCharacterMemoryRepository();
 
         // Act
-        // const response = await _systemUnderTest.getKeyCharacter(0);
+        const response = await _systemUnderTest.getKeyCharacter(0);
 
         // Assert
-        expect(true).toBe(false);
+        expect(response).toBeDefined();
+        expect(response.location).toBe("Penzance")
     })
+
 });
