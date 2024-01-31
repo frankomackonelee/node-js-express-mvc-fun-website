@@ -36,7 +36,7 @@ export class KeyCharacterMemoryRepository extends IKeyCharacterRepository{
 
             this._KeyCharacterStore[nextMaxIndex] = {...character, uid};
     
-            resolve({id: nextMaxIndex, uid: "abc"});
+            resolve({ id: nextMaxIndex, uid });
         })
     }
 
@@ -76,9 +76,15 @@ export class KeyCharacterMemoryRepository extends IKeyCharacterRepository{
 
     private isAuthorised(id: number, authorisedUids: string[]): boolean{
         //TODO: implement logic here...
-        console.log(id);
-        console.log(authorisedUids);
-        return true;
+
+        const character = this._KeyCharacterStore[id];
+
+        if(character == undefined || character == null || !character.uid){
+            return false;
+        }
+
+        return authorisedUids.includes(character.uid);
+
     }
 
     private getMaxId(): number | null{

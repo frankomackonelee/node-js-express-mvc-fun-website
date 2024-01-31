@@ -20,6 +20,7 @@ The project has been extended to add fuctionality and the following features
 - ability to edit the story immediately following a submission
 - adding a 404 page via 302 redirect
 - Continuous Integration Pipeline - GitHub Action to lint and test the project on push to any branch and pull to main
+- Stories can only by edited by original browser that made the request via cookie
 
 ## Getting Started: to run the project
 
@@ -34,7 +35,7 @@ npm run dev
 The Node.js server will run at localhost:30000 by default
 
 ## TODO List (Also documents limiations!)
-- Restrict PUT access to original author (hack) using uid added to cookies of the browser making original request
+- Bring consistency to how errors are treated in the controllers, and unauthorised and not found routes are processed
 - Improve security around user generated content (UGC) vs XSS and SQL Injection
 - Add form validation for input of UGC
 - Add proper persistency layer and instructions to switch between so you can run project locally with or without a persistency layer

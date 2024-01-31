@@ -3,6 +3,8 @@ import { KeyCharacter } from '../models/KeyCharacter';
 import Container from 'typedi';
 import { IKeyCharacterRepositoryToken } from '../infrastructure/interfaces/key-character-repository';
 
+const auth_cookie_name: string =  "story_uids";
+
 function renderStory(res: Response, story: KeyCharacter) {
     res.render('story', story);
 }
@@ -111,11 +113,27 @@ router.get('/not-found', (req, res) => {
 });
 
 router.post('/submit-form', async (req, res) => {
+    let currentUids = [];
+
+    if (req.cookies && req.cookies.story_uids) {
+      try {
+        // Assuming the cookie is a JSON string array
+        currentUids = JSON.parse(req.cookies.story_uids);
+  
+        // Validate if it's an array of strings
+        if (!Array.isArray(currentUids) || !currentUids.every(uid => typeof uid === 'string')) {
+          throw new Error('Invalid format');
+        }
+      } catch (e) {
+        return res.status(400).send('Invalid story_uids cookie format');
+      }
+    }
+
     const character: KeyCharacter = req.body;  
 
     const keyCharacterRepo = Container.get(IKeyCharacterRepositoryToken);
     
-    const { id } = await keyCharacterRepo.addKeyCharacter(character);
+    const { id, uid } = await keyCharacterRepo.addKeyCharacter(character);
     const newStory = await keyCharacterRepo.getKeyCharacter(id);
 
     const data: creatPageData = {
@@ -125,7 +143,10 @@ router.post('/submit-form', async (req, res) => {
         ...newStory
     }
 
-    // TODO: Set cookie here
+    const updated_uids: string[] = [...currentUids,uid];
+
+    res.cookie(auth_cookie_name, JSON.stringify(updated_uids), { httpOnly: true }); // You can add more cookie options as needed
+
     renderFormSubmission(res, data);
     
 });
@@ -136,13 +157,29 @@ router.post('/submit-form/:id', async (req, res, next) => {
         if(req.body._method !== "PUT"){
             return res.status(400).send('Invalid request');
         }
+
+        let currentUids = [];
+
+        if (req.cookies && req.cookies.story_uids) {
+          try {
+            // Assuming the cookie is a JSON string array
+            currentUids = JSON.parse(req.cookies.story_uids);
+      
+            // Validate if it's an array of strings
+            if (!Array.isArray(currentUids) || !currentUids.every(uid => typeof uid === 'string')) {
+              throw new Error('Invalid format');
+            }
+          } catch (e) {
+            return res.status(400).send('Invalid story_uids cookie format');
+          }
+        }
     
         const id = parseInt(req.params.id, 10);
     
         const character: KeyCharacter = req.body;  
         const keyCharacterRepo = Container.get(IKeyCharacterRepositoryToken);
         // TODO: Reading the cookies needed here
-        await keyCharacterRepo.editKeyCharacter(id, character, []);
+        await keyCharacterRepo.editKeyCharacter(id, character, currentUids);
     
         const data: creatPageData = {
             title: "Edit Story",

@@ -1,4 +1,5 @@
 import express, { Request, Response, NextFunction } from 'express';
+import cookieParser from 'cookie-parser';
 import { join } from 'path';
 import { Container } from 'typedi';
 import createError from 'http-errors';
@@ -20,6 +21,9 @@ const app = express();
 
 app.set('views', join(__dirname, 'views'))
 app.set('view engine', 'ejs');
+
+// Allowing use of cookies for 'authorization'
+app.use(cookieParser())
 
 // Middleware to parse the body of the POST request
 // Must proceed route definitions
