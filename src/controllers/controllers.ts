@@ -1,4 +1,5 @@
-import { Router, Response } from 'express';
+import { Router, Response, Request } from 'express';
+import QueryString from 'qs'; 
 import { KeyCharacter } from '../models/KeyCharacter';
 import Container from 'typedi';
 import { IKeyCharacterRepositoryToken } from '../infrastructure/interfaces/key-character-repository';
@@ -11,6 +12,23 @@ function renderStory(res: Response, story: KeyCharacter) {
 
 export function renderPageWithTitle(res: Response, page: string, title: string) {
     res.render(page, { title });
+}
+
+function getStoryUidsFromRequest(req: Request<object, object, object, QueryString.ParsedQs, Record<string, object>>): string[]{
+    let currentUids: string[] = [];
+
+    if (req.cookies && req.cookies.story_uids) {
+        // Assuming the cookie is a JSON string array
+        currentUids = JSON.parse(req.cookies.story_uids);
+  
+        // Validate if it's an array of strings
+        if (!Array.isArray(currentUids) || !currentUids.every(uid => typeof uid === 'string')) {
+          throw new Error('Invalid format');
+        }
+    }
+
+    return currentUids;
+    
 }
 
 interface creatPageData extends KeyCharacter {
@@ -113,21 +131,8 @@ router.get('/not-found', (req, res) => {
 });
 
 router.post('/submit-form', async (req, res) => {
-    let currentUids = [];
 
-    if (req.cookies && req.cookies.story_uids) {
-      try {
-        // Assuming the cookie is a JSON string array
-        currentUids = JSON.parse(req.cookies.story_uids);
-  
-        // Validate if it's an array of strings
-        if (!Array.isArray(currentUids) || !currentUids.every(uid => typeof uid === 'string')) {
-          throw new Error('Invalid format');
-        }
-      } catch (e) {
-        return res.status(400).send('Invalid story_uids cookie format');
-      }
-    }
+    const currentUids = getStoryUidsFromRequest(req);
 
     const character: KeyCharacter = req.body;  
 
@@ -154,25 +159,12 @@ router.post('/submit-form', async (req, res) => {
 router.post('/submit-form/:id', async (req, res, next) => {
     
     try{
+        
         if(req.body._method !== "PUT"){
             return res.status(400).send('Invalid request');
         }
 
-        let currentUids = [];
-
-        if (req.cookies && req.cookies.story_uids) {
-          try {
-            // Assuming the cookie is a JSON string array
-            currentUids = JSON.parse(req.cookies.story_uids);
-      
-            // Validate if it's an array of strings
-            if (!Array.isArray(currentUids) || !currentUids.every(uid => typeof uid === 'string')) {
-              throw new Error('Invalid format');
-            }
-          } catch (e) {
-            return res.status(400).send('Invalid story_uids cookie format');
-          }
-        }
+        const currentUids = getStoryUidsFromRequest(req);
     
         const id = parseInt(req.params.id, 10);
     
@@ -197,5 +189,7 @@ router.post('/submit-form/:id', async (req, res, next) => {
     }
 
 });
+
+
 
 export default router;
