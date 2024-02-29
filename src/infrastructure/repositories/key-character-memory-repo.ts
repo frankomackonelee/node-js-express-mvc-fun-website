@@ -28,6 +28,7 @@ export class KeyCharacterMemoryRepository extends IKeyCharacterRepository{
     }
 
     addKeyCharacter(character: KeyCharacter): Promise<{ id: number, uid: string }> {
+
         return new Promise((resolve) => {
             const currentMaxIndex = this.getMaxId();
             const nextMaxIndex: number = currentMaxIndex ? currentMaxIndex + 1 : 1 ;
@@ -37,10 +38,13 @@ export class KeyCharacterMemoryRepository extends IKeyCharacterRepository{
             this._KeyCharacterStore[nextMaxIndex] = {...character, uid};
     
             resolve({ id: nextMaxIndex, uid });
-        })
+
+        });
+
     }
 
     editKeyCharacter(id: number, character: KeyCharacter, authorisedUids: string[]): Promise<number> {
+
         return new Promise((resolve, reject) => {
 
             if(this.isAuthorised(id, authorisedUids)){
@@ -54,11 +58,14 @@ export class KeyCharacterMemoryRepository extends IKeyCharacterRepository{
                 reject(new NotAuthorisedError(`Request to edit ${id} is made by invalid browser`));
             }
 
-        })
+        });
+
     }
 
     getKeyCharacter(id: number): Promise<KeyCharacter> {
+
         return new Promise((resolve, reject) => {
+
             if (!this._KeyCharacterStore) {
                 reject(new Error("Memory store not instantiated."));
             } else {
@@ -71,7 +78,9 @@ export class KeyCharacterMemoryRepository extends IKeyCharacterRepository{
                     resolve(result);
                 }
             }
+
         });
+
     }
 
     private isAuthorised(id: number, authorisedUids: string[]): boolean{
@@ -92,7 +101,6 @@ export class KeyCharacterMemoryRepository extends IKeyCharacterRepository{
         for (const key in this._KeyCharacterStore) {
             // Convert the key to a number as it's received as a string
             const numericKey = parseInt(key, 10);
-
             // Check if this key is the new maximum
             if (maxIndex === null || numericKey > maxIndex) {
                 maxIndex = numericKey;
